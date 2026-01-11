@@ -3,7 +3,7 @@ import NewsItem from './NewsItem';
 import Loading from './Loading';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function News({ setProgress, theme, category = "general", apiKey }) {
+export default function News({ setProgress, theme, category = "general"}) {
 
     const pageSize = 19, country = "us";
 
