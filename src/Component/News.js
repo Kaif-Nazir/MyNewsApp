@@ -3,7 +3,9 @@ import NewsItem from './NewsItem';
 import Loading from './Loading';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function News({setProgress, theme, pageSize = 19, category = "general", country = "us", apiKey }) {
+export default function News({setProgress, theme, category = "general" , apiKey}) {
+
+    const pageSize = 19 , country = "us";
 
     const [renderNews, newsSet] = useState({
         articles: [],
@@ -43,7 +45,7 @@ export default function News({setProgress, theme, pageSize = 19, category = "gen
         }
 
         loadNews();
-    }, [renderNews.page, category, country]);
+    }, [renderNews.page, category, country , apiKey ,setProgress]);
 
 
 
@@ -63,7 +65,7 @@ export default function News({setProgress, theme, pageSize = 19, category = "gen
 
     return (
         <>
-            <h1 className={`text-center text-${theme == "dark" ? "light" : "dark"}`}>Top News Today on {capitalizeFirstLetter(category)}</h1>
+            <h1 className={`text-center text-${theme === "dark" ? "light" : "dark"}`}>Top News Today on {capitalizeFirstLetter(category)}</h1>
             {renderNews.loading && <Loading />}
             <InfiniteScroll
                 dataLength={renderNews.articles.length}
