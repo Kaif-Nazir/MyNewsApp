@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function NewsItem({ theme, title = "Cannot Load Title", description = "Cannot Load Description", imageUrl, newsUrl, author = "Unknown", date = "Unknown", newsSource }) {

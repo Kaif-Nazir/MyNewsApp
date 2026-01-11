@@ -1,9 +1,9 @@
 import './App.css';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Navbar from './Component/Navbar';
 import News from './Component/News';
 import ScrollToTop from './Component/ScrollToTop';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import LoadingBar from "react-top-loading-bar";
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <div className={`bg-${theme} min-vh-100`}>
-      <BrowserRouter>
+      <HashRouter>
 
         <LoadingBar
           color="#f11946"
@@ -35,7 +35,7 @@ export default function App() {
           <Route exact path="/sports" element={<News setProgress={setProgress} theme={theme} key="sports" pageSize={19} category="sports" country="us" apiKey={apiKey} />} />
           <Route exact path="/technology" element={<News setProgress={setProgress} theme={theme} key="technology" pageSize={19} category="technology" country="us" apiKey={apiKey} />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

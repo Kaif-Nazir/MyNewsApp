@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar({ theme, setTheme }) {
@@ -77,10 +77,11 @@ export default function Navbar({ theme, setTheme }) {
                         onClick={handleThemeChange}
                     >
                         <img
-                            src={currThemeIcon}
-                            alt="theme toggle"
+                            src={process.env.PUBLIC_URL+currThemeIcon}
+                            alt="Theme toggle"
                             style={{ width: 20, height: 20 }}
                         />
+
                     </button>
                 </div>
             </div>

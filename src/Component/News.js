@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import {useEffect, useState } from 'react'
 import NewsItem from './NewsItem';
 import Loading from './Loading';
 import InfiniteScroll from 'react-infinite-scroll-component';
