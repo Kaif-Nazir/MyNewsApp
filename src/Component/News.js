@@ -1,74 +1,91 @@
 import React, { useEffect, useState } from 'react'
 import NewsItem from './NewsItem';
 import Loading from './Loading';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-
-export default function News({ theme, pageSize = 19, category = "general", country = "us", apiKey }) {
+export default function News({setProgress, theme, pageSize = 19, category = "general", country = "us", apiKey }) {
 
     const [renderNews, newsSet] = useState({
         articles: [],
         page: 1,
-        loading: false,
+        loading: true,
         totalResults: 0
     });
 
-    function handleNextClick() {
-        newsSet(prev => ({
-            ...prev,
-            page: prev.page + 1
-        }));
-    }
-    function handlePrevClick() {
-        newsSet(prev => ({
-            ...prev,
-            page: Math.max(1, prev.page - 1)
-        }));
-    }
     useEffect(() => {
         async function loadNews() {
             try {
-                const url = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}
-                &page=${renderNews.page}&pageSize=${pageSize}`;
-                newsSet(prev => ({ ...prev, loading: false }));
+                setProgress(10);
+                newsSet(prev => ({ ...prev, loading: true }));
+
+                const url =
+                    `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}` +
+                    `&page=${renderNews.page}&pageSize=${pageSize}&apiKey=${apiKey}`;
+
                 const res = await fetch(url);
+                setProgress(30);
                 const data = await res.json();
+                setProgress(70);
                 newsSet(prev => ({
                     ...prev,
-                    articles: data.articles || [],
-                    loading: true,
-                    totalResults: data.totalResults
+                    articles:
+                        renderNews.page === 1
+                            ? data.articles || []
+                            : [...prev.articles, ...(data.articles || [])],
+                    totalResults: data.totalResults,
+                    loading: false
                 }));
+                setProgress(100);
             } catch (e) {
                 console.error(e);
                 newsSet(prev => ({ ...prev, loading: false }));
             }
         }
+
         loadNews();
-    }, [renderNews.page, renderNews.totalResults]);
+    }, [renderNews.page, category, country]);
+
 
 
     const capitalizeFirstLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    const fetchData = () => {
+        if (renderNews.loading) return;
+
+        newsSet(prev => ({
+            ...prev,
+            page: prev.page + 1
+        }));
+    };
+
+
     return (
-        <div>
+        <>
             <h1 className={`text-center text-${theme == "dark" ? "light" : "dark"}`}>Top News Today on {capitalizeFirstLetter(category)}</h1>
-            {!renderNews.loading && <Loading />}
-            <div className="row">
-                {renderNews.loading && renderNews.articles.map((element) => {
-                    return (
-                        <div className="col-md-3 mx-3 my-3" key={element.url}>
-                            <NewsItem theme={theme} title={element.title ? element.title.slice(0, 50) : "No Title"} description={element.description ? element.description.slice(0, 86) : "No Description"}
-                                imageUrl={element.urlToImage || "https://www.pngmart.com/files/23/No-PNG-Photo.png"} newsUrl={element.url} author={element.author} date={element.publishedAt} newsSource={element.source.name} />
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="container d-flex justify-content-between">
-                <button disabled={renderNews.page <= 1} type="button" className="btn btn-success" onClick={handlePrevClick}>&larr; Prev</button>
-                <button disabled={renderNews.page >= Math.ceil(renderNews.totalResults / 18)} type="button" className="btn btn-primary" onClick={handleNextClick}>Next &rarr;</button>
-            </div>
-        </div >
+            {renderNews.loading && <Loading />}
+            <InfiniteScroll
+                dataLength={renderNews.articles.length}
+                next={fetchData}
+                hasMore={renderNews.articles.length < renderNews.totalResults}
+                loader={renderNews.loading && <Loading />}
+            >
+
+                <div className="container">
+                    <div className="row">
+                        {renderNews.articles.map((element) => {
+                            return (
+                                <div className="col-md-3 mx-5 my-3" key={element.url}>
+                                    <NewsItem theme={theme} title={element.title ? element.title.slice(0, 50)+"..." : "No Title"} description={element.description ? element.description.slice(0, 86)+"..." : "No Description"}
+                                        imageUrl={element.urlToImage || "https://www.pngmart.com/files/23/No-PNG-Photo.png"} newsUrl={element.url} author={element.author} date={element.publishedAt} newsSource={element.source.name} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+            </InfiniteScroll>
+        </>
     )
 }
