@@ -13,7 +13,6 @@ export default function App() {
   );
   const [progress, setProgress] = useState(0);
 
-  const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
   return (
     <div className={`bg-${theme} min-vh-100`}>
@@ -27,13 +26,13 @@ export default function App() {
         <ScrollToTop />
         <Navbar theme={theme} setTheme={setTheme} />
         <Routes>
-          <Route exact path="/" element={<News setProgress={setProgress} theme={theme} key="general"  category="general" apiKey={apiKey} />} />
-          <Route exact path="/business" element={<News setProgress={setProgress} theme={theme} key="business"  category="business"  apiKey={apiKey} />} />
-          <Route exact path="/entertainment" element={<News setProgress={setProgress} theme={theme} key="entertainment"  category="entertainment"  apiKey={apiKey} />} />
-          <Route exact path="/health" element={<News setProgress={setProgress} theme={theme} key="health"  category="health"  apiKey={apiKey} />} />
-          <Route exact path="/science" element={<News setProgress={setProgress} theme={theme} key="science"  category="science"  apiKey={apiKey} />} />
-          <Route exact path="/sports" element={<News setProgress={setProgress} theme={theme} key="sports"  category="sports"  apiKey={apiKey} />} />
-          <Route exact path="/technology" element={<News setProgress={setProgress} theme={theme} key="technology"  category="technology"  apiKey={apiKey} />} />
+          <Route exact path="/" element={<News setProgress={setProgress} theme={theme} key="general"  category="general" />} />
+          <Route exact path="/business" element={<News setProgress={setProgress} theme={theme} key="business"  category="business"   />} />
+          <Route exact path="/entertainment" element={<News setProgress={setProgress} theme={theme} key="entertainment"  category="entertainment"   />} />
+          <Route exact path="/health" element={<News setProgress={setProgress} theme={theme} key="health"  category="health"   />} />
+          <Route exact path="/science" element={<News setProgress={setProgress} theme={theme} key="science"  category="science"   />} />
+          <Route exact path="/sports" element={<News setProgress={setProgress} theme={theme} key="sports"  category="sports"   />} />
+          <Route exact path="/technology" element={<News setProgress={setProgress} theme={theme} key="technology"  category="technology"   />} />
         </Routes>
       </HashRouter>
     </div>

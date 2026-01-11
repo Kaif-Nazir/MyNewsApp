@@ -1,11 +1,11 @@
-import {useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import NewsItem from './NewsItem';
 import Loading from './Loading';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function News({setProgress, theme, category = "general" , apiKey}) {
+export default function News({ setProgress, theme, category = "general", apiKey }) {
 
-    const pageSize = 19 , country = "us";
+    const pageSize = 19, country = "us";
 
     const [renderNews, newsSet] = useState({
         articles: [],
@@ -21,13 +21,15 @@ export default function News({setProgress, theme, category = "general" , apiKey}
                 newsSet(prev => ({ ...prev, loading: true }));
 
                 const url =
-                    `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}` +
-                    `&page=${renderNews.page}&pageSize=${pageSize}&apiKey=${apiKey}`;
+                    `/.netlify/functions/news?category=${category}` +
+                    `&country=${country}&page=${renderNews.page}&pageSize=${pageSize}`;
 
                 const res = await fetch(url);
                 setProgress(30);
+
                 const data = await res.json();
                 setProgress(70);
+
                 newsSet(prev => ({
                     ...prev,
                     articles:
@@ -37,15 +39,18 @@ export default function News({setProgress, theme, category = "general" , apiKey}
                     totalResults: data.totalResults,
                     loading: false
                 }));
+
                 setProgress(100);
             } catch (e) {
                 console.error(e);
                 newsSet(prev => ({ ...prev, loading: false }));
+                setProgress(100);
             }
         }
 
         loadNews();
-    }, [renderNews.page, category, country , apiKey ,setProgress]);
+    }, [renderNews.page, category, country, setProgress]);
+
 
 
 
@@ -79,7 +84,7 @@ export default function News({setProgress, theme, category = "general" , apiKey}
                         {renderNews.articles.map((element) => {
                             return (
                                 <div className="col-md-3 mx-5 my-3" key={element.url}>
-                                    <NewsItem theme={theme} title={element.title ? element.title.slice(0, 50)+"..." : "No Title"} description={element.description ? element.description.slice(0, 86)+"..." : "No Description"}
+                                    <NewsItem theme={theme} title={element.title ? element.title.slice(0, 50) + "..." : "No Title"} description={element.description ? element.description.slice(0, 86) + "..." : "No Description"}
                                         imageUrl={element.urlToImage || "https://www.pngmart.com/files/23/No-PNG-Photo.png"} newsUrl={element.url} author={element.author} date={element.publishedAt} newsSource={element.source.name} />
                                 </div>
                             );
